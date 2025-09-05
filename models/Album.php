@@ -40,4 +40,25 @@ class Album extends Media {
     public function getEditor(): string {
         return $this->editor;
     }
+
+    public function add(): void {
+        try {
+            $pdo = connection();
+            $stmt = $pdo->prepare("INSERT INTO media (title, author, available) VALUES (:title, :author, :available)");
+            $stmt->execute([
+                ':title' => $this->getTitle(),
+                ':author' => $this->getAuthor(),
+                ':available' => $this->getAvailable() ? 1 : 0,
+            ]);
+            $mediaId = $pdo->lastInsertId();
+            $stmt = $pdo->prepare("INSERT INTO album (media_id, track_number, editor) VALUES (:media_id, :track_number, :editor)");
+            $stmt->execute([
+                ':media_id' => $mediaId,
+                ':track_number' => $this->getTrackNumber(),
+                ':editor' => $this->getEditor(),
+            ]);
+        } catch (PDOException $e) {
+            throw new Exception("Erreur lors de l'ajout de l'album : " . $e->getMessage());
+        }
+    }
 }

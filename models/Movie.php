@@ -40,6 +40,27 @@ class Movie extends Media {
     public function getGenre(): Genre {
         return $this->genre;
     }
+
+    public function add(): void {
+        try {
+            $pdo = connection();
+            $stmt = $pdo->prepare("INSERT INTO media (title, author, available) VALUES (:title, :author, :available)");
+            $stmt->execute([
+                ':title' => $this->getTitle(),
+                ':author' => $this->getAuthor(),
+                ':available' => $this->getAvailable() ? 1 : 0,
+            ]);
+            $mediaId = $pdo->lastInsertId();
+            $stmt = $pdo->prepare("INSERT INTO movie (media_id, duration, genre) VALUES (:media_id, :duration, :genre)");
+            $stmt->execute([
+                ':media_id' => $mediaId,
+                ':duration' => $this->getDuration(),
+                ':genre' => $this->getGenre()->value
+            ]);
+        } catch (PDOException $e) {
+            throw new Exception("Erreur lors de l'ajout du film : " . $e->getMessage());
+        }
+    }
 }
 
 /**

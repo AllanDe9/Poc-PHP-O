@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Class Book
  *
@@ -28,5 +27,25 @@ class Book extends Media {
 
     public function getPageNumber(): int {
         return $this->pageNumber;
+    }
+
+    public function add(): void {
+        try {
+            $pdo = connection();
+            $stmt = $pdo->prepare("INSERT INTO media (title, author, available) VALUES (:title, :author, :available)");
+            $stmt->execute([
+                ':title' => $this->getTitle(),
+                ':author' => $this->getAuthor(),
+                ':available' => $this->getAvailable() ? 1 : 0,
+            ]);
+            $mediaId = $pdo->lastInsertId();
+            $stmt = $pdo->prepare("INSERT INTO book (media_id, page_number) VALUES (:media_id, :page_number)");
+            $stmt->execute([
+                ':media_id' => $mediaId,
+                ':page_number' => $this->getPageNumber(),
+            ]);
+        } catch (PDOException $e) {
+            throw new Exception("Erreur lors de l'ajout du livre : " . $e->getMessage());
+        }
     }
 }

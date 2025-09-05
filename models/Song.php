@@ -56,4 +56,18 @@ class Song  {
     public function getAlbum(): Album {
         return $this->album;
     }
+
+    public function add(): void {
+        try {
+            $pdo = connection();
+            $stmt = $pdo->prepare("INSERT INTO song (title, notation, album_id) VALUES (:title, :notation, :album_id)");
+            $stmt->execute([
+                ':title' => $this->getTitle(),
+                ':notation' => $this->getNotation(),
+                ':album_id' => $this->getAlbum()->getId(),
+            ]);
+        } catch (PDOException $e) {
+            throw new Exception("Erreur lors de l'ajout de la chanson : " . $e->getMessage());
+        }
+    }
 }

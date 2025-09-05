@@ -1,4 +1,13 @@
-RewriteEngine On
-RewriteBase /
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^(.*)$ index.php [L,QSA]
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Définit la racine du projet si nécessaire
+    RewriteBase /POC-PHP-O/
+
+    # Ne pas réécrire les fichiers ou dossiers existants
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # Tout le reste redirige vers index.php en conservant les paramètres
+    RewriteRule ^(.*)$ index.php?params=$1 [QSA,L]
+</IfModule>

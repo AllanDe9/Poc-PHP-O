@@ -1,10 +1,10 @@
 <?php
 /**
- * Class Media
- *
- * Ce modèle représente un média dans la médiathèque.
- */
-class Media {
+    * Class Media abstraite
+    *
+    * Ce modèle représente un média dans la médiathèque.
+    */
+abstract class Media {
 
     /**
      * @var int Identifiant unique du média

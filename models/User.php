@@ -48,4 +48,54 @@ class User {
         return $this->password;
     }
 
+    public function login(string $username, string $password): ?User {
+        try {
+            $pdo = connection();
+            $stmt = $pdo->prepare("SELECT * FROM users WHERE username = :username");
+            $stmt->execute([
+                ':username' => $username,
+            ]);
+            $foundUser = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($foundUser && password_verify($password, $foundUser['password'])) {
+                return new User($foundUser['id'], $foundUser['username'], $foundUser['password']);
+            } else {
+                return null;
+            }
+        } catch (PDOException $e) {
+            throw new Exception("Erreur lors de la connexion de l'utilisateur : " . $e->getMessage());
+        }
+    }
+
+    public function register(string $username, string $password): void {
+        try {
+            $pdo = connection();
+            $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+            $stmt = $pdo->prepare("INSERT INTO users (username, password) VALUES (:username, :password)");
+            $stmt->execute([
+                ':username' => $username,
+                ':password' => $hashedPassword,
+            ]);
+        } catch (PDOException $e) {
+            throw new Exception("Erreur lors de l'inscription de l'utilisateur : " . $e->getMessage());
+        }
+    }
+
+    public function checkDisponibility(string $username): bool {
+        try {
+            $pdo = connection();
+            $stmt = $pdo->prepare("SELECT count(*) FROM users WHERE username = :username");
+            $stmt->execute([
+                ':username' => $username,
+            ]);
+            $foundUser = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($foundUser) {
+                return false; 
+            } else {
+                return true; 
+            }
+            
+        } catch (PDOException $e) {
+            throw new Exception("Erreur lors de la vérification de la disponibilité du nom d'utilisateur : " . $e->getMessage());
+        }
+    }
 }
