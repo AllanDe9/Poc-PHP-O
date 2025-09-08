@@ -30,6 +30,11 @@ switch ($params[0]) {
         $controller = new MediaController();
         $controller->listMedia();
         break;
+    case 'media':
+        require 'controllers/MediaController.php';
+        $controller = new MediaController();
+        $controller->showMedia($params[1] ?? null);
+        break;
     default:
         http_response_code(404);
         echo "Page non trouvée";

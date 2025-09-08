@@ -48,6 +48,14 @@ class User {
         return $this->password;
     }
 
+    /**
+     * Méthode pour connecter un utilisateur
+     *
+     * @param string $username
+     * @param string $password
+     * @return bool
+     * @throws Exception
+     */
     public function login(string $username, string $password): bool {
         try {
             $pdo = connection();
@@ -69,6 +77,14 @@ class User {
         }
     }
 
+    /**
+     * Méthode pour enregistrer un nouvel utilisateur
+     *
+     * @param string $username
+     * @param string $password
+     * @return void
+     * @throws Exception
+     */
     public function register(string $username, string $password): void {
         try {
             $pdo = connection();
@@ -83,6 +99,12 @@ class User {
         }
     }
 
+    /**
+     * Méthode pour vérifier la disponibilité d'un nom d'utilisateur
+     *
+     * @return bool True si le nom d'utilisateur est disponible, false sinon
+     * @throws Exception
+     */
     public function checkDisponibility(): bool {
         try {
             $pdo = connection();

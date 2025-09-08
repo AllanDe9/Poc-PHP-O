@@ -57,6 +57,39 @@ class Song  {
         return $this->album;
     }
 
+    /**
+     * Méthode pour récupérer toutes les chansons d'un album de la base de données
+     *
+     * @param Album $album
+     * @return array
+     * @throws Exception
+     */
+    public static function getSongs($album): array {
+        try {
+            $pdo = connection();
+            $stmt = $pdo->prepare("SELECT s.id, s.title, s.notation, s.album_id 
+                                   FROM song s 
+                                   WHERE s.album_id = :album_id");
+            $stmt->execute([':album_id' => $album->getId()]);
+            $songs = [];
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $songs[] = new Song(
+                    $row['id'],
+                    $row['title'],
+                    $row['notation'],
+                    $album
+                );
+            }
+            return $songs;
+        } catch (PDOException $e) {
+            throw new Exception("Erreur lors de la récupération des chansons : " . $e->getMessage());
+        }
+    }
+    /**
+     * Méthode pour ajouter une chanson à la base de données
+     *
+     * @throws Exception
+     */
     public function add(): void {
         try {
             $pdo = connection();

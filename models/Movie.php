@@ -41,6 +41,41 @@ class Movie extends Media {
         return $this->genre;
     }
 
+    /**
+     * Méthode pour récupérer tous les films de la base de données
+     *
+     * @return array
+     * @throws Exception
+     */
+    public static function getAllMovies(): array {
+        try {
+            $pdo = connection();
+            $stmt = $pdo->prepare("SELECT m.id, m.title, m.author, m.available, mv.duration, mv.genre 
+                                   FROM media m 
+                                   JOIN movie mv ON m.id = mv.media_id");
+            $stmt->execute();
+            $movies = [];
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $movies[] = new Movie(
+                    $row['id'],
+                    $row['title'],
+                    $row['author'],
+                    (bool)$row['available'],
+                    (int)$row['duration'],
+                    Genre::from($row['genre'])
+                );
+            }
+            return $movies;
+        } catch (PDOException $e) {
+            throw new Exception("Erreur lors de la récupération des films : " . $e->getMessage());
+        }
+    }
+    /**
+     * Méthode pour récupérer tous les films de la base de données
+     *
+     * @return array
+     * @throws Exception
+     */
     public function add(): void {
         try {
             $pdo = connection();

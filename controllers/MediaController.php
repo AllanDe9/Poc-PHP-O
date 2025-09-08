@@ -1,7 +1,76 @@
 <?php
+
+require_once 'models/Media.php';
+require_once 'models/Book.php';
+require_once 'models/Movie.php';
+require_once 'models/Album.php';
+require_once 'models/Song.php';
+
 class MediaController {
 
     public function listMedia() {
-        echo "Liste des médias";
+        $books = Book::getAllBooks();
+        $albums = Album::getAllAlbums();
+        $movies = Movie::getAllMovies();
+        $medias = array_merge($books, $albums, $movies);
+        if (isset($_GET['search']) && !empty($_GET['search'])) {
+            $search = $_GET['search'];
+            $medias = array_filter($medias, function($media) use ($search) {
+                $titleWords = explode(' ', $media->getTitle());
+                $authorWords = explode(' ', $media->getAuthor());
+                foreach (array_merge($titleWords, $authorWords) as $word) {
+                    if (levenshtein($word, $search) <= 2) {
+                        return true;
+                    }
+                }
+                return false;
+            });
+        }
+        if (isset($_GET['sort']) && !empty($_GET['sort'])) {
+            $sort = $_GET['sort'];
+            usort($medias, function($a, $b) use ($sort) {
+                if ($sort == 'title_asc') {
+                    return strcmp($a->getTitle(), $b->getTitle());
+                } elseif ($sort == 'title_desc') {
+                    return strcmp($b->getTitle(), $a->getTitle());
+                } elseif ($sort == 'author_asc') {
+                    return strcmp($a->getAuthor(), $b->getAuthor());
+                } elseif ($sort == 'author_desc') {
+                    return strcmp($b->getAuthor(), $a->getAuthor());
+                } elseif ($sort == 'available') {
+                    return ($a->getAvailable() === $b->getAvailable()) ? 0 : ($a->getAvailable() ? -1 : 1);
+                }
+
+                return 0;
+            });
+        }
+        require 'views/Dashboard.php';
+    }
+
+    public function showMedia($id) {
+        if (!isset($id) || empty($id) || !is_numeric($id)) {
+            echo "Aucun identifiant fourni.";
+            return;
+        } 
+        $id = (int)$id;
+        $books = Book::getAllBooks();
+        $albums = Album::getAllAlbums();
+        $movies = Movie::getAllMovies();
+        $medias = array_merge($books, $albums, $movies);
+        $media = null;
+        foreach ($medias as $m) {
+            if ($m->getId() === $id) {
+                $media = $m;
+                break;
+            }
+        }
+        if (!$media) {
+            echo "Média non trouvé.";
+            return;
+        } 
+        if ($media instanceof Album) {
+            $songs = Song::getSongs($media);
+        }
+        require 'views/MediaView.php';
     }
 }

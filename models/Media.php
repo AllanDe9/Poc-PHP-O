@@ -1,4 +1,5 @@
 <?php
+
 /**
     * Class Media abstraite
     *
@@ -57,6 +58,17 @@ abstract class Media {
         return $this->available;
     }
 
+    public function getType(): string {
+        if ($this instanceof Book) {
+            return 'Livre';
+        } elseif ($this instanceof Movie) {
+            return 'Film';
+        } elseif ($this instanceof Album) {
+            return 'Album';
+        }
+        return '';
+    }
+
     /**
      * Emprunte le média si disponible
      *
@@ -82,4 +94,5 @@ abstract class Media {
         }
         return false;
     }
+    
 }

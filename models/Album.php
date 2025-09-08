@@ -41,6 +41,43 @@ class Album extends Media {
         return $this->editor;
     }
 
+    
+    /**
+     * Méthode pour récupérer tous les albums de la base de données
+     *
+     * @return array
+     * @throws Exception
+     */
+    public static function getAllAlbums(): array {
+        try {
+            $pdo = connection();
+            $stmt = $pdo->prepare("SELECT m.id, m.title, m.author, m.available, a.track_number, a.editor 
+                                   FROM media m 
+                                   JOIN album a ON m.id = a.media_id");
+            $stmt->execute();
+            $albums = [];
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $albums[] = new Album(
+                    $row['id'],
+                    $row['title'],
+                    $row['author'],
+                    (bool)$row['available'],
+                    (int)$row['track_number'],
+                    $row['editor']
+                );
+            }
+            return $albums;
+        } catch (PDOException $e) {
+            throw new Exception("Erreur lors de la récupération des albums : " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Méthode pour ajouter un album à la base de données
+     *
+     * @return void
+     * @throws Exception
+     */
     public function add(): void {
         try {
             $pdo = connection();

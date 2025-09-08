@@ -1,6 +1,6 @@
 <nav class="flex items-center justify-between bg-gray-800 p-4 text-white">
     <div class="flex items-center space-x-4">
-        <h1 class="text-xl font-bold">Gestion Médiathèque</h1>
+        <a href="/Poc-PHP-O/" class="text-xl font-bold">Gestion Médiathèque</a>
         <?php if (isset($_SESSION['user'])): ?>
             <span class="font-semibold">Bienvenue <?php echo$_SESSION['user']; ?></span>
         <?php endif; ?>

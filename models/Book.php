@@ -29,6 +29,41 @@ class Book extends Media {
         return $this->pageNumber;
     }
 
+    /**
+     * Méthode pour récupérer tous les livres de la base de données
+     *
+     * @return array
+     * @throws Exception
+     */
+    public static function getAllBooks(): array {
+        try {
+            $pdo = connection();
+            $stmt = $pdo->prepare("SELECT m.id, m.title, m.author, m.available, b.page_number 
+                                   FROM media m 
+                                   JOIN book b ON m.id = b.media_id");
+            $stmt->execute();
+            $books = [];
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $books[] = new Book(
+                    $row['id'],
+                    $row['title'],
+                    $row['author'],
+                    (bool)$row['available'],
+                    (int)$row['page_number']
+                );
+            }
+            return $books;
+        } catch (PDOException $e) {
+            throw new Exception("Erreur lors de la récupération des livres : " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Méthode pour ajouter un livre à la base de données
+     *
+     * @return void
+     * @throws Exception
+     */
     public function add(): void {
         try {
             $pdo = connection();
@@ -48,4 +83,6 @@ class Book extends Media {
             throw new Exception("Erreur lors de l'ajout du livre : " . $e->getMessage());
         }
     }
+
+    
 }
