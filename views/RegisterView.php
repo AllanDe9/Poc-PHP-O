@@ -13,13 +13,22 @@
         <form action="register" method="post" class="bg-white p-8 rounded shadow-md w-full max-w-sm">
             <div class="mb-4">
                 <label for="username" class="block text-gray-700 mb-2">Nom d'utilisateur:</label>
-                <input type="text" id="username" name="username" required class="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <input type="text" id="username" name="username" value="<?php echo isset($_POST['username']) ? $_POST['username'] : ''; ?>" required class="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
             </div>
             <div class="mb-6">
                 <label for="password" class="block text-gray-700 mb-2">Mot de passe:</label>
                 <input type="password" id="password" name="password" required class="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <span class="text-xs text-gray-500">Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.</span>
             </div>
+            <?php if (isset($errors) && !empty($errors)): ?>
+                <div class="mb-4 text-red-500">
+                    <ul>
+                        <?php foreach ($errors as $error): ?>
+                            <li><?php echo $error ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            <?php endif; ?>
             <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition">Inscription</button>
         </form>
     </div>

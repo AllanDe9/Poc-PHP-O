@@ -48,7 +48,7 @@ class User {
         return $this->password;
     }
 
-    public function login(string $username, string $password): ?User {
+    public function login(string $username, string $password): bool {
         try {
             $pdo = connection();
             $stmt = $pdo->prepare("SELECT * FROM users WHERE username = :username");
@@ -57,9 +57,12 @@ class User {
             ]);
             $foundUser = $stmt->fetch(PDO::FETCH_ASSOC);
             if ($foundUser && password_verify($password, $foundUser['password'])) {
-                return new User($foundUser['id'], $foundUser['username'], $foundUser['password']);
+                $this->id = $foundUser['id'];
+                $this->username = $foundUser['username'];
+                $this->password = $foundUser['password'];
+                return true;
             } else {
-                return null;
+                return false;
             }
         } catch (PDOException $e) {
             throw new Exception("Erreur lors de la connexion de l'utilisateur : " . $e->getMessage());
@@ -80,16 +83,16 @@ class User {
         }
     }
 
-    public function checkDisponibility(string $username): bool {
+    public function checkDisponibility(): bool {
         try {
             $pdo = connection();
             $stmt = $pdo->prepare("SELECT count(*) FROM users WHERE username = :username");
             $stmt->execute([
-                ':username' => $username,
+                ':username' => $this->username,
             ]);
             $foundUser = $stmt->fetch(PDO::FETCH_ASSOC);
-            if ($foundUser) {
-                return false; 
+            if ($foundUser['count(*)'] > 0) {
+                return false;
             } else {
                 return true; 
             }
