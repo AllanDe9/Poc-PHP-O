@@ -71,6 +71,21 @@ class MediaController {
         if ($media instanceof Album) {
             $songs = Song::getSongs($media);
         }
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (isset($_POST['media_id'])) {
+                $media->changeAvailable();
+                $_SESSION['message'] = $media->getAvailable() ? 'Média rendu avec succès.' : 'Média emprunté avec succès.';
+            } elseif (isset($_POST['delete_id'])) {
+                $media->delete();
+                $_SESSION['message'] = 'Média supprimé avec succès.';
+                header("Location: /");
+                exit();
+            } elseif (isset($_POST['delete_song']) && $media instanceof Album) {
+                $song = $_POST['delete_song'];
+                $song->delete();
+                $_SESSION['message'] = 'Chanson supprimée avec succès.';
+            }
+        }
         require 'views/MediaView.php';
     }
 }

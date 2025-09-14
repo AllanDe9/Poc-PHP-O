@@ -27,7 +27,14 @@
             <option value="available" <?php echo (isset($_GET['sort']) && $_GET['sort'] == 'available') ? 'selected' : ''; ?>>Disponibilité</option>
             </select>
         </form>
-        </form>
+        <?php if (isset($_SESSION['message'])): ?>
+            <div class="max-w-2xl mx-auto mb-6 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
+                <?php 
+                    echo $_SESSION['message']; 
+                    unset($_SESSION['message']);
+                ?>
+            </div>
+        <?php endif; ?>
         <div class="overflow-x-auto rounded-lg shadow-lg bg-white">
             <table class="min-w-full border border-gray-200">
                 <thead>

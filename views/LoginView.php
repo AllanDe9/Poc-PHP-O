@@ -24,6 +24,7 @@
             <?php endif; ?>
             <?php if (isset($_SESSION['message'])): ?>
                 <div class="mb-4 text-green-500"><?php echo $_SESSION['message']; ?></div>
+                <?php unset($_SESSION['message']); ?>
             <?php endif; ?>
             <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition">Connexion</button>
         </form>

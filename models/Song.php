@@ -103,4 +103,14 @@ class Song  {
             throw new Exception("Erreur lors de l'ajout de la chanson : " . $e->getMessage());
         }
     }
+
+    public function delete(): void {
+        try {
+            $pdo = connection();
+            $stmt = $pdo->prepare("DELETE FROM song WHERE id = :id");
+            $stmt->execute([':id' => $this->id]);
+        } catch (PDOException $e) {
+            throw new Exception("Erreur lors de la suppression de la chanson : " . $e->getMessage());
+        }
+    }
 }

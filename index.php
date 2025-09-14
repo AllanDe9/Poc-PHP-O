@@ -35,6 +35,54 @@ switch ($params[0]) {
         $controller = new MediaController();
         $controller->showMedia($params[1] ?? null);
         break;
+    case 'add':
+        switch ($params[1] ?? '') {
+            case 'book':
+                require 'controllers/BookController.php';
+                $controller = new BookController();
+                $controller->addBook();
+                break;
+            case 'album':
+                require 'controllers/AlbumController.php';
+                $controller = new AlbumController();
+                $controller->addAlbum();
+                break;
+            case 'movie':
+                require 'controllers/MovieController.php';
+                $controller = new MovieController();
+                $controller->addMovie();
+                break;
+            case 'song':
+                require 'controllers/SongController.php';
+                $controller = new SongController();
+                $controller->addSong();
+                break;
+        }
+        break;
+    case 'edit':
+        switch ($params[1] ?? '') {
+            case 'book':
+                require 'controllers/BookController.php';
+                $controller = new BookController();
+                $controller->editBook($params[2] ?? null);
+                break;
+            case 'album':
+                require 'controllers/AlbumController.php';
+                $controller = new AlbumController();
+                $controller->editAlbum($params[2] ?? null);
+                break;
+            case 'movie':
+                require 'controllers/MovieController.php';
+                $controller = new MovieController();
+                $controller->editMovie($params[2] ?? null);
+                break;
+            case 'song':
+                require 'controllers/SongController.php';
+                $controller = new SongController();
+                $controller->editSong($params[2] ?? null);
+                break;
+        }
+        break;
     default:
         http_response_code(404);
         echo "Page non trouvée";

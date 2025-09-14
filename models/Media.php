@@ -58,6 +58,41 @@ abstract class Media {
         return $this->available;
     }
 
+    /**
+     * Change la disponibilité du média
+     */
+    public function changeAvailable() {
+        $this->available = !$this->available;
+        $pdo = connection();
+        $stmt = $pdo->prepare("UPDATE media SET available = :available WHERE id = :id");
+        $stmt->execute([
+            ':available' => $this->available ? 1 : 0,
+            ':id' => $this->id
+        ]);
+    }
+
+    public function delete(): void {
+        try {
+            $pdo = connection();
+            $stmt = $pdo->prepare("DELETE FROM media WHERE id = :id");
+            $stmt->execute([':id' => $this->id]);
+
+
+            if ($this instanceof Book) {
+                $stmt = $pdo->prepare("DELETE FROM books WHERE media_id = :id");
+                $stmt->execute([':id' => $this->id]);
+            } elseif ($this instanceof Movie) {
+                $stmt = $pdo->prepare("DELETE FROM movies WHERE media_id = :id");
+                $stmt->execute([':id' => $this->id]);
+            } elseif ($this instanceof Album) {
+                $stmt = $pdo->prepare("DELETE FROM albums WHERE media_id = :id");
+                $stmt->execute([':id' => $this->id]);
+            }
+        } catch (PDOException $e) {
+            throw new Exception("Erreur lors de la suppression du média : " . $e->getMessage());
+        }
+    }
+
     public function getType(): string {
         if ($this instanceof Book) {
             return 'Livre';
@@ -68,31 +103,4 @@ abstract class Media {
         }
         return '';
     }
-
-    /**
-     * Emprunte le média si disponible
-     *
-     * @return bool True si l'emprunt a réussi, false sinon
-     */
-    public function borrow() {
-        if ($this->available) {
-            $this->available = false;
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Rend le média s'il est emprunté
-     *
-     * @return bool True si le retour a réussi, false sinon
-     */
-    public function return() {
-        if (!$this->available) {
-            $this->available = true;
-            return true;
-        }
-        return false;
-    }
-    
 }
