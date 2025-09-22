@@ -37,8 +37,16 @@ class Movie extends Media {
         return $this->duration;
     }
 
+    public function setDuration(int $duration): void {
+        $this->duration = $duration;
+    }
+
     public function getGenre(): Genre {
         return $this->genre;
+    }
+
+    public function setGenre(Genre $genre): void {
+        $this->genre = $genre;
     }
 
     /**
@@ -81,19 +89,78 @@ class Movie extends Media {
             $pdo = connection();
             $stmt = $pdo->prepare("INSERT INTO media (title, author, available) VALUES (:title, :author, :available)");
             $stmt->execute([
-                ':title' => $this->getTitle(),
-                ':author' => $this->getAuthor(),
-                ':available' => $this->getAvailable() ? 1 : 0,
+                ':title' => $this->title,
+                ':author' => $this->author,
+                ':available' => $this->available ? 1 : 0,
             ]);
             $mediaId = $pdo->lastInsertId();
             $stmt = $pdo->prepare("INSERT INTO movie (media_id, duration, genre) VALUES (:media_id, :duration, :genre)");
             $stmt->execute([
                 ':media_id' => $mediaId,
-                ':duration' => $this->getDuration(),
-                ':genre' => $this->getGenre()->value
+                ':duration' => $this->duration,
+                ':genre' => $this->genre->value
             ]);
         } catch (PDOException $e) {
             throw new Exception("Erreur lors de l'ajout du film : " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Méthode pour mettre à jour un film dans la base de données
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function update(){
+        try {
+            $pdo = connection();
+            $stmt = $pdo->prepare("UPDATE media SET title = :title, author = :author, available = :available WHERE id = :id");
+            $stmt->execute([
+                ':title' => $this->title,
+                ':author' => $this->author,
+                ':available' => $this->available ? 1 : 0,
+                ':id' => $this->id
+            ]);
+            $stmt = $pdo->prepare("UPDATE movie SET duration = :duration, genre = :genre WHERE media_id = :media_id");
+            $stmt->execute([
+                ':duration' => $this->duration,
+                ':genre' => $this->genre->value,
+                ':media_id' => $this->id
+            ]);
+        } catch (PDOException $e) {
+            throw new Exception("Erreur lors de la mise à jour du film : " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Méthode pour récupérer un film par son ID
+     *
+     * @param int $id
+     * @return Movie|null
+     * @throws Exception
+     */
+    public static function getById(int $id): ?Movie {
+        try {
+            $pdo = connection();
+            $stmt = $pdo->prepare("SELECT m.id, m.title, m.author, m.available, mv.duration, mv.genre 
+                                   FROM media m 
+                                   JOIN movie mv ON m.id = mv.media_id
+                                   WHERE m.id = :id");
+            $stmt->execute([':id' => $id]);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($row) {
+                return new Movie(
+                    $row['id'],
+                    $row['title'],
+                    $row['author'],
+                    (bool)$row['available'],
+                    (int)$row['duration'],
+                    Genre::from($row['genre'])
+                );
+            }
+            return null;
+        } catch (PDOException $e) {
+            throw new Exception("Erreur lors de la récupération du film : " . $e->getMessage());
         }
     }
 }

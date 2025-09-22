@@ -10,22 +10,22 @@ abstract class Media {
     /**
      * @var int Identifiant unique du média
      */
-    private int $id;
+    protected int $id;
 
     /**
      * @var string Titre du média
      */
-    private string $title;
+    protected string $title;
 
     /**
      * @var string Auteur du média
      */
-    private string $author;
+    protected string $author;
 
     /**
      * @var bool Disponibilité du média (true = disponible, false = emprunté)
      */
-    private bool $available;
+    protected bool $available;
 
     /**
      * Constructeur de la classe Media
@@ -46,16 +46,32 @@ abstract class Media {
         return $this->id;
     }
 
+    public function setId($id) {
+        $this->id = $id;
+    }
+
     public function getTitle() {
         return $this->title;
+    }
+
+    public function setTitle($title) {
+        $this->title = $title;
     }
 
     public function getAuthor() {
         return $this->author;
     }
 
+    public function setAuthor($author) {
+        $this->author = $author;
+    }
+
     public function getAvailable() {
         return $this->available;
+    }
+
+    public function setAvailable($available) {
+        $this->available = $available;
     }
 
     /**
@@ -71,28 +87,41 @@ abstract class Media {
         ]);
     }
 
+    /**
+     * Méthode pour supprimer un média de la base de données
+     *
+     * @return void
+     * @throws Exception
+     */
     public function delete(): void {
         try {
             $pdo = connection();
             $stmt = $pdo->prepare("DELETE FROM media WHERE id = :id");
             $stmt->execute([':id' => $this->id]);
 
-
             if ($this instanceof Book) {
-                $stmt = $pdo->prepare("DELETE FROM books WHERE media_id = :id");
-                $stmt->execute([':id' => $this->id]);
+                $table = 'book';
             } elseif ($this instanceof Movie) {
-                $stmt = $pdo->prepare("DELETE FROM movies WHERE media_id = :id");
-                $stmt->execute([':id' => $this->id]);
+                $table = 'movie';
             } elseif ($this instanceof Album) {
-                $stmt = $pdo->prepare("DELETE FROM albums WHERE media_id = :id");
+                $table = 'album';
+            }
+
+            if (isset($table)) {
+                $stmt = $pdo->prepare("DELETE FROM $table WHERE media_id = :id");
                 $stmt->execute([':id' => $this->id]);
             }
+
         } catch (PDOException $e) {
             throw new Exception("Erreur lors de la suppression du média : " . $e->getMessage());
         }
     }
 
+    /**
+     * Retourne le type de média sous forme de chaîne de caractères
+     *
+     * @return string
+     */
     public function getType(): string {
         if ($this instanceof Book) {
             return 'Livre';

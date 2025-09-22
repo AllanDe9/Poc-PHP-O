@@ -31,31 +31,40 @@ switch ($params[0]) {
         $controller->listMedia();
         break;
     case 'media':
-        require 'controllers/MediaController.php';
-        $controller = new MediaController();
-        $controller->showMedia($params[1] ?? null);
+        switch ($params[2] ?? '') {
+            case 'add-song':
+                require 'controllers/SongController.php';
+                $controller = new SongController();
+                $controller->add($params[1] ?? null);
+                break;
+            case 'edit':
+                require 'controllers/SongController.php';
+                $controller = new SongController();
+                $controller->edit($params[3] ?? null);
+                break;
+            default:
+                require 'controllers/MediaController.php';
+                $controller = new MediaController();
+                $controller->showMedia($params[1] ?? null);
+                break;
+        }
         break;
     case 'add':
         switch ($params[1] ?? '') {
             case 'book':
                 require 'controllers/BookController.php';
                 $controller = new BookController();
-                $controller->addBook();
+                $controller->add();
                 break;
             case 'album':
                 require 'controllers/AlbumController.php';
                 $controller = new AlbumController();
-                $controller->addAlbum();
+                $controller->add();
                 break;
             case 'movie':
                 require 'controllers/MovieController.php';
                 $controller = new MovieController();
-                $controller->addMovie();
-                break;
-            case 'song':
-                require 'controllers/SongController.php';
-                $controller = new SongController();
-                $controller->addSong();
+                $controller->add();
                 break;
         }
         break;
@@ -64,22 +73,17 @@ switch ($params[0]) {
             case 'book':
                 require 'controllers/BookController.php';
                 $controller = new BookController();
-                $controller->editBook($params[2] ?? null);
+                $controller->edit($params[2] ?? null);
                 break;
             case 'album':
                 require 'controllers/AlbumController.php';
                 $controller = new AlbumController();
-                $controller->editAlbum($params[2] ?? null);
+                $controller->edit($params[2] ?? null);
                 break;
             case 'movie':
                 require 'controllers/MovieController.php';
                 $controller = new MovieController();
-                $controller->editMovie($params[2] ?? null);
-                break;
-            case 'song':
-                require 'controllers/SongController.php';
-                $controller = new SongController();
-                $controller->editSong($params[2] ?? null);
+                $controller->edit($params[2] ?? null);
                 break;
         }
         break;
