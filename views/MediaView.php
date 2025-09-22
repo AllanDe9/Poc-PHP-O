@@ -38,20 +38,17 @@
             <?php if (isset($songs)): ?>
                 <h3 class="text-xl font-semibold text-gray-700 mt-6 mb-2">Chansons:</h3>
                 <ul class="list-disc mb-4 ml-4">
-                    <?php foreach ($songs as $song): ?>
-                        <div class="flex items-center justify-between py-2">
-                            <li><?php echo $song->getTitle(); ?></li>
-                            <span class="space-x-2">
-                                <a href="edit/song/<?php echo $song->getId(); ?>" class="text-sm px-4 py-2 rounded-full border font-semibold text-gray-700 hover:bg-gray-400 hover:text-white transition"> Modifier </a>
-                                <form method="post" style="display:inline;">
-                                    <input type="hidden" name="delete_song" value="<?php echo $song ?>">
-                                    <button type="submit" class="text-sm px-4 py-2 rounded-full border font-semibold text-gray-700 hover:bg-red-600 hover:text-white transition ml-4">Supprimer</button>
-                                </form>
-                            </span>
+                <?php foreach ($songs as $song): ?>
+                    <div class="flex items-center justify-between py-2">
+                        <li><?php echo $song->getTitle(); ?></li>
+                        <span class="space-x-2">
+                            <a href="./<?php echo $media->getId(); ?>/edit-song/<?php echo $song->getId(); ?>" class="text-sm px-4 py-2 rounded-full border font-semibold text-gray-700 hover:bg-gray-400 hover:text-white transition"> Modifier </a>
+                            <a href="?delete-song=<?php echo $song->getId(); ?>" class="text-sm px-4 py-2 rounded-full border font-semibold text-gray-700 hover:bg-gray-400 hover:text-white transition">Supprimer</a>
+                        </span>
                     </div>
-                    <?php endforeach; ?>
+                <?php endforeach; ?>
                 </ul>
-            <a href="add/song/<?php echo $media->getId(); ?>" class="px-4 py-2 rounded-full border font-semibold text-gray-700 hover:bg-gray-400 hover:text-white transition">Ajouter une chanson</a>
+            <a href="./<?php echo $media->getId(); ?>/add-song" class="px-4 py-2 rounded-full border font-semibold text-gray-700 hover:bg-gray-400 hover:text-white transition">Ajouter une chanson</a>
         <?php endif; ?>
     </div>
     <div class="flex justify-between max-w-2xl mx-auto mt-8 mb-6 p-8 bg-white rounded-lg shadow">
@@ -61,7 +58,7 @@
             <?php echo $media->getAvailable() ? 'Emprunter' : 'Rendre'; ?>
             </button>
         </form>
-        <a href="edit/<?php echo $media->getId(); ?>" class="px-4 py-2 rounded-full border font-semibold text-gray-700 hover:bg-gray-400 hover:text-white transition">
+        <a href="../edit/<?php echo $media->getId(); ?>" class="px-4 py-2 rounded-full border font-semibold text-gray-700 hover:bg-gray-400 hover:text-white transition">
             Modifier
         </a>
         <a href="?delete=true" class="px-4 py-2 rounded-full border font-semibold text-gray-700 hover:bg-red-600 hover:text-white transition ml-4">

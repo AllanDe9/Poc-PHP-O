@@ -37,7 +37,7 @@ switch ($params[0]) {
                 $controller = new SongController();
                 $controller->add($params[1] ?? null);
                 break;
-            case 'edit':
+            case 'edit-song':
                 require 'controllers/SongController.php';
                 $controller = new SongController();
                 $controller->edit($params[3] ?? null);
@@ -65,6 +65,10 @@ switch ($params[0]) {
                 require 'controllers/MovieController.php';
                 $controller = new MovieController();
                 $controller->add();
+                break;
+            default:
+                http_response_code(404);
+                echo "Page non trouvée";
                 break;
         }
         break;

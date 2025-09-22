@@ -34,7 +34,7 @@ class SongController {
 
             try {
                 $song->add();
-                header("Location: /media/" . $albumId);
+                header("Location: /Poc-PHP-O/media/" . $song->getAlbum()->getId());
                 exit();
             } catch (Exception $e) {
                 echo "Erreur lors de l'ajout de la chanson : " . $e->getMessage();
@@ -73,7 +73,7 @@ class SongController {
 
             try {
                 $song->update();
-                header("Location: /media/" . $song->getAlbum()->getId());
+                header("Location: /Poc-PHP-O/media/" . $song->getAlbum()->getId());
                 exit();
             } catch (Exception $e) {
                 echo "Erreur lors de la mise à jour de la chanson : " . $e->getMessage();

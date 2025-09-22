@@ -67,6 +67,17 @@
                 </tbody>
             </table>
         </div>
+        <div class="flex justify-end gap-4 mt-8">
+            <a href="add/book" class="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700 transition shadow font-semibold">
+                Ajouter Livre
+            </a>
+            <a href="add/album" class="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700 transition shadow font-semibold">
+                Ajouter Album
+            </a>
+            <a href="add/movie" class="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700 transition shadow font-semibold">
+                Ajouter Film
+            </a>
+        </div>
     </div>
 </body>
 </html>

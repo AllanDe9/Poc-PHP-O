@@ -168,9 +168,10 @@ class Song  {
         try {
             $pdo = connection();
             $stmt = $pdo->prepare("SELECT s.id, s.title, s.notation, s.album_id,
-                                          a.id AS album_id, a.title AS album_title, a.author AS album_author, a.available AS album_available, a.track_number AS album_track_number, a.editor AS album_editor
+                                          a.media_id AS album_id, m.title AS album_title, m.author AS album_author, m.available AS album_available, a.track_number AS album_track_number, a.editor AS album_editor
                                    FROM song s
                                    JOIN album a ON s.album_id = a.media_id
+                                   JOIN media m ON a.media_id = m.id
                                    WHERE s.id = :id");
             $stmt->execute([':id' => $id]);
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
