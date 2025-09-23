@@ -80,12 +80,16 @@ class MediaController {
                 $_SESSION['message'] = 'Média supprimé avec succès.';
                 header("Location: /");
                 exit();
-            } elseif (isset($_POST['delete_song']) && $media instanceof Album) {
-                $song = $_POST['delete_song'];
+            } elseif (isset($_POST['delete-song']) && $media instanceof Album) {
+                $songId = $_POST['delete-song'];
+                $song = Song::getById($songId);
                 $song->delete();
                 $_SESSION['message'] = 'Chanson supprimée avec succès.';
+                header("Location: ./".$media->getId());
+                exit();
             }
         }
+        
         require 'views/MediaView.php';
     }
 }

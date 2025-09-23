@@ -25,6 +25,9 @@
                     <?php echo $media->getAvailable() ? 'Disponible' : 'Indisponible'; ?>
                 </span>
             </div>
+            <div class="mb-4 flex justify-center">
+                <img src="" alt="Media" class="rounded-lg shadow-md object-cover w-300 h-400">
+            </div>
             <p class="text-gray-600 mb-1"><span class="font-medium">Auteur:</span> <?php echo $media->getAuthor(); ?></p>
             <?php if ($media instanceof Book): ?>
                 <p class="text-gray-600 mb-1"><span class="font-medium">Nombre de pages:</span> <?php echo ($media->getPageNumber()); ?></p>
@@ -67,7 +70,6 @@
     </div>
 
     <?php if (isset($_GET['delete']) && $_GET['delete'] === 'true'): ?>
-    <!-- Pop-up de confirmation -->
     <div class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
         <div class="bg-white rounded-lg shadow-lg p-8 max-w-sm w-full">
             <h2 class="text-xl font-bold mb-4">Confirmer la suppression</h2>
@@ -76,6 +78,21 @@
                 <a href="?" class="px-4 py-2 rounded bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300">Annuler</a>
                 <form method="post" style="display:inline;">
                     <input type="hidden" name="delete_id" value="<?php echo $media->getId(); ?>">
+                    <button type="submit" class="px-4 py-2 rounded bg-red-600 text-white font-semibold hover:bg-red-700">Supprimer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+    <?php if (isset($_GET['delete-song'])): ?>
+    <div class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-lg p-8 max-w-sm w-full">
+            <h2 class="text-xl font-bold mb-4">Confirmer la suppression</h2>
+            <p class="mb-6">Êtes-vous sûr de vouloir supprimer cette chanson ? Cette action est irréversible.</p>
+            <div class="flex justify-end space-x-4">
+                <a href="?" class="px-4 py-2 rounded bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300">Annuler</a>
+                <form method="post" style="display:inline;">
+                    <input type="hidden" name="delete-song" value="<?php echo $_GET['delete-song']; ?>">
                     <button type="submit" class="px-4 py-2 rounded bg-red-600 text-white font-semibold hover:bg-red-700">Supprimer</button>
                 </form>
             </div>

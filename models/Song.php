@@ -157,6 +157,16 @@ class Song  {
         }
     }
 
+    public static function deleteByAlbum(Album $album): void {
+        try {
+            $pdo = connection();
+            $stmt = $pdo->prepare("DELETE FROM song WHERE album_id = :album_id");
+            $stmt->execute([':album_id' => $album->getId()]);
+        } catch (PDOException $e) {
+            throw new Exception("Erreur lors de la suppression des chansons de l'album : " . $e->getMessage());
+        }
+    }
+
     /**
      * Méthode pour récupérer une chanson par son ID
      *

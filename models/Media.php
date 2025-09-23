@@ -105,6 +105,7 @@ abstract class Media {
                 $table = 'movie';
             } elseif ($this instanceof Album) {
                 $table = 'album';
+                Song::deleteByAlbum($this);
             }
 
             if (isset($table)) {
@@ -118,7 +119,7 @@ abstract class Media {
     }
 
     /**
-     * Retourne le type de média sous forme de chaîne de caractères
+     * Retourne le type de média sous forme de chaîne
      *
      * @return string
      */
@@ -131,5 +132,35 @@ abstract class Media {
             return 'Album';
         }
         return '';
+    }
+
+    /**
+     * Génère une image simple avec le titre du média
+     *
+     * @return void
+     */
+    public function generateImage(): void {
+        $width = 300;
+        $height = 400;
+
+        $image = imagecreatetruecolor($width, $height);
+
+        $bgColor = imagecolorallocate($image, 200, 200, 200); // gris clair
+        $textColor = imagecolorallocate($image, 50, 50, 50);  // gris foncé
+
+        imagefilledrectangle($image, 0, 0, $width, $height, $bgColor);
+
+        $fontSize = 5; 
+        $textWidth = imagefontwidth($fontSize) * strlen($this->title);
+        $textHeight = imagefontheight($fontSize);
+        $x = ($width - $textWidth) / 2;
+        $y = ($height - $textHeight) / 2;
+
+        imagestring($image, $fontSize, $x, $y, $this->title, $textColor);
+
+        header('Content-Type: image/png');
+        imagepng($image);
+
+        imagedestroy($image);
     }
 }
