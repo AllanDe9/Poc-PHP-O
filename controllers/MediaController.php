@@ -92,4 +92,26 @@ class MediaController {
         
         require 'views/MediaView.php';
     }
+
+    public function image($id) {
+        $id = (int)$id;
+        $books = Book::getAllBooks();
+        $albums = Album::getAllAlbums();
+        $movies = Movie::getAllMovies();
+        $medias = array_merge($books, $albums, $movies);
+        $media = null;
+        foreach ($medias as $m) {
+            if ($m->getId() === $id) {
+                $media = $m;
+                break;
+            }
+        }
+        if (!$media) {
+            echo "Média non trouvé.";
+            return;
+        } else {
+            echo $media->generateImage();
+        }
+        
+    }
 }

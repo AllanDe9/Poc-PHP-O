@@ -45,7 +45,11 @@ switch ($params[0]) {
             default:
                 require 'controllers/MediaController.php';
                 $controller = new MediaController();
-                $controller->showMedia($params[1] ?? null);
+                if (($params[2] ?? '') === 'image') {
+                    $controller->image($params[1] ?? null);
+                } else {
+                    $controller->showMedia($params[1] ?? null);
+                }
                 break;
         }
         break;

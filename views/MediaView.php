@@ -26,7 +26,7 @@
                 </span>
             </div>
             <div class="mb-4 flex justify-center">
-                <img src="" alt="Media" class="rounded-lg shadow-md object-cover w-300 h-400">
+                <img src="/Poc-PHP-O/media/<?php echo $media->getId(); ?>/image" alt="Media" class="rounded-lg shadow-md object-cover w-200 h-200">
             </div>
             <p class="text-gray-600 mb-1"><span class="font-medium">Auteur:</span> <?php echo $media->getAuthor(); ?></p>
             <?php if ($media instanceof Book): ?>
