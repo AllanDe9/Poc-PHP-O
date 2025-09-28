@@ -78,7 +78,7 @@ class MediaController {
             } elseif (isset($_POST['delete_id'])) {
                 $media->delete();
                 $_SESSION['message'] = 'Média supprimé avec succès.';
-                header("Location: /");
+                header("Location: /Poc-PHP-O/");
                 exit();
             } elseif (isset($_POST['delete-song']) && $media instanceof Album) {
                 $songId = $_POST['delete-song'];

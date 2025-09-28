@@ -20,7 +20,7 @@ class BookController {
             $book = new Book(0, $title, $author, $available, $pageNumber);
             try {
                 $book->add();
-                header("Location: /media");
+                header("Location: /Poc-PHP-O/");
                 exit();
             } catch (Exception $e) {
                 echo "Erreur lors de l'ajout du livre : " . $e->getMessage();
@@ -37,13 +37,13 @@ class BookController {
             return;
         }
         try {
-            $book = Book::getById((int)$id);
+            $media = Book::getById((int)$id);
         } catch (Exception $e) {
             echo "Erreur lors de la récupération du livre : " . $e->getMessage();
             return;
         }
 
-        if ($book === null) {
+        if ($media === null) {
             echo "Livre non trouvé.";
             return;
         }
@@ -59,14 +59,14 @@ class BookController {
                 return;
             }
 
-            $book->setTitle($title);
-            $book->setAuthor($author);
-            $book->setAvailable($available);
-            $book->setPageNumber($pageNumber);
+            $media->setTitle($title);
+            $media->setAuthor($author);
+            $media->setAvailable($available);
+            $media->setPageNumber($pageNumber);
 
             try {
-                $book->update();
-                header("Location: /media");
+                $media->update();
+                header("Location: /Poc-PHP-O/media/".$media->getId());
                 exit();
             } catch (Exception $e) {
                 echo "Erreur lors de la mise à jour du livre : " . $e->getMessage();

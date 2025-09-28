@@ -96,8 +96,6 @@ abstract class Media {
     public function delete(): void {
         try {
             $pdo = connection();
-            $stmt = $pdo->prepare("DELETE FROM media WHERE id = :id");
-            $stmt->execute([':id' => $this->id]);
 
             if ($this instanceof Book) {
                 $table = 'book';
@@ -112,6 +110,9 @@ abstract class Media {
                 $stmt = $pdo->prepare("DELETE FROM $table WHERE media_id = :id");
                 $stmt->execute([':id' => $this->id]);
             }
+
+            $stmt = $pdo->prepare("DELETE FROM media WHERE id = :id");
+            $stmt->execute([':id' => $this->id]);
 
         } catch (PDOException $e) {
             throw new Exception("Erreur lors de la suppression du média : " . $e->getMessage());
@@ -174,32 +175,27 @@ abstract class Media {
         
         elseif ($type === 'Film') {
        
-            $reelColor = imagecolorallocate($image, 80, 80, 80); // gris
-            $holeColor = imagecolorallocate($image, 200, 200, 200); // gris clair
-            $borderColor = imagecolorallocate($image, 0, 0, 0); // noir
-          
-            imagefilledellipse($image, 100, 130, 80, 80, $reelColor);
-            imageellipse($image, 100, 130, 80, 80, $borderColor);
-           
-            imagefilledellipse($image, 100, 130, 20, 20, $holeColor);
-            imageellipse($image, 100, 130, 20, 20, $borderColor);
-      
-            for ($i = 0; $i < 6; $i++) {
-                $angle = deg2rad(60 * $i);
-                $x = 100 + cos($angle) * 30;
-                $y = 130 + sin($angle) * 30;
-                imagefilledellipse($image, $x, $y, 12, 12, $holeColor);
-                imageellipse($image, $x, $y, 12, 12, $borderColor);
-            }
-        
-            for ($i = 0; $i < 8; $i++) {
-                $angle = deg2rad(45 * $i);
-                $x1 = 100 + cos($angle) * 40;
-                $y1 = 130 + sin($angle) * 40;
-                $x2 = 100 + cos($angle) * 30;
-                $y2 = 130 + sin($angle) * 30;
-                imageline($image, $x1, $y1, $x2, $y2, $borderColor);
-            }
+            // Dessiner un écran de télévision
+            $screenColor = imagecolorallocate($image, 30, 30, 30); // gris foncé pour l'écran
+            $frameColor = imagecolorallocate($image, 80, 80, 80); // gris pour le cadre
+            $borderColor = imagecolorallocate($image, 0, 0, 0); // noir pour le contour
+            $standColor = imagecolorallocate($image, 60, 60, 60); // gris pour le pied
+
+            // Cadre de la TV
+            imagefilledrectangle($image, 50, 80, 150, 150, $frameColor);
+            imagerectangle($image, 50, 80, 150, 150, $borderColor);
+
+            // Écran
+            imagefilledrectangle($image, 60, 90, 140, 140, $screenColor);
+
+            // Pied de la TV
+            imagefilledrectangle($image, 90, 151, 110, 165, $standColor);
+            imagerectangle($image, 90, 151, 110, 165, $borderColor);
+
+            // Boutons sous l'écran
+            $buttonColor = imagecolorallocate($image, 200, 0, 0); // rouge
+            imagefilledellipse($image, 60, 145, 6, 6, $buttonColor);
+            imageellipse($image, 60, 145, 6, 6, $borderColor);
         }
       
         elseif ($type === 'Album') {

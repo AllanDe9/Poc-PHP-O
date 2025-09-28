@@ -5,7 +5,7 @@ require 'connection.php';
 
 $params = explode('/', $_GET['params'] ?? '');
 if (!isset($_SESSION['user']) && !in_array($params[0], ['login', 'register'])) {
-    header('Location: login');
+    header('Location: /Poc-PHP-O/login');
     exit();
 }
 

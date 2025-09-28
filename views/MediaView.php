@@ -61,9 +61,19 @@
             <?php echo $media->getAvailable() ? 'Emprunter' : 'Rendre'; ?>
             </button>
         </form>
-        <a href="../edit/<?php echo $media->getId(); ?>" class="px-4 py-2 rounded-full border font-semibold text-gray-700 hover:bg-gray-400 hover:text-white transition">
+        <?php if ($media instanceof Album): ?>
+        <a href="../edit/album/<?php echo $media->getId(); ?>" class="px-4 py-2 rounded-full border font-semibold text-gray-700 hover:bg-gray-400 hover:text-white transition">
             Modifier
         </a>
+        <?php elseif ($media instanceof Movie): ?>
+        <a href="../edit/movie/<?php echo $media->getId(); ?>" class="px-4 py-2 rounded-full border font-semibold text-gray-700 hover:bg-gray-400 hover:text-white transition">
+            Modifier
+        </a>
+        <?php elseif ($media instanceof Book): ?>
+        <a href="../edit/book/<?php echo $media->getId(); ?>" class="px-4 py-2 rounded-full border font-semibold text-gray-700 hover:bg-gray-400 hover:text-white transition">
+            Modifier
+        </a>
+        <?php endif; ?>
         <a href="?delete=true" class="px-4 py-2 rounded-full border font-semibold text-gray-700 hover:bg-red-600 hover:text-white transition ml-4">
             Supprimer
         </a>

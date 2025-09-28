@@ -13,7 +13,7 @@ class AlbumController {
             $trackNumber = isset($_POST['track_number']) ? (int)$_POST['track_number'] : 0;
             $editor = $_POST['editor'] ?? '';
 
-            if (empty($title) || empty($author) || $trackNumber <= 0) {
+            if (empty($title) || empty($author) || $trackNumber <= 0 || empty($editor)) {
                 echo "Tous les champs sont obligatoires et le nombre de pistes doit être positif.";
                 return;
             }
@@ -21,7 +21,7 @@ class AlbumController {
             $album = new Album(0, $title, $author, $available, $trackNumber, $editor);
             try {
                 $album->add();
-                header("Location: /media");
+                header("Location: /Poc-PHP-O/");
                 exit();
             } catch (Exception $e) {
                 echo "Erreur lors de l'ajout de l'album : " . $e->getMessage();
@@ -38,12 +38,12 @@ class AlbumController {
             return;
         }
         try {
-            $album = Album::getById((int)$id);
+            $media = Album::getById((int)$id);
         } catch (Exception $e) {
             echo "Erreur lors de la récupération de l'album : " . $e->getMessage();
             return;
         }
-        if ($album === null) {
+        if ($media === null) {
             echo "Album non trouvé.";
             return;
         }
@@ -54,20 +54,20 @@ class AlbumController {
             $trackNumber = isset($_POST['track_number']) ? (int)$_POST['track_number'] : 0;
             $editor = $_POST['editor'] ?? '';
 
-            if (empty($title) || empty($author) || $trackNumber <= 0) {
+            if (empty($title) || empty($author) || $trackNumber <= 0 || empty($editor)) {
                 echo "Tous les champs sont obligatoires et le nombre de pistes doit être positif.";
                 return;
             }
 
-            $album->setTitle($title);
-            $album->setAuthor($author);
-            $album->setAvailable($available);
-            $album->setTrackNumber($trackNumber);
-            $album->setEditor($editor);
+            $media->setTitle($title);
+            $media->setAuthor($author);
+            $media->setAvailable($available);
+            $media->setTrackNumber($trackNumber);
+            $media->setEditor($editor);
 
             try {
-                $album->update();
-                header("Location: /media");
+                $media->update();
+                header("Location: /Poc-PHP-O/media/".$media->getId());
                 exit();
             } catch (Exception $e) {
                 echo "Erreur lors de la mise à jour de l'album : " . $e->getMessage();
